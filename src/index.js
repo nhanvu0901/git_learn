@@ -2,13 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const nameElement = document.querySelector('.name');
     const cursor = document.querySelector('.cursor');
     const text = "Vu Trong Nhan";
-    const colors = ['#FF5733', '#33FF57', '#3357FF', '#F133FF', '#33FFF5', '#FFF833'];
+    const colors = ['#64B5F6', '#81C784', '#FFD54F', '#4FC3F7', '#9575CD'];
     const particlesContainer = document.querySelector('.particles');
     
     // Initial delay before typing starts
     setTimeout(() => {
         typeText();
-    }, 1000);
+    }, 1200);
     
     // Typing animation
     function typeText() {
@@ -28,78 +28,80 @@ document.addEventListener('DOMContentLoaded', () => {
                 i++;
             } else {
                 clearInterval(typingInterval);
-                // After typing is complete, start color animation
-                setTimeout(() => {
-                    startColorAnimation();
-                    createParticles();
-                }, 500);
                 
-                // Remove cursor after typing
+                // After typing is complete, add subtle color effect and particles
                 setTimeout(() => {
-                    cursor.style.display = 'none';
-                }, 1500);
+                    startSubtleColorAnimation();
+                    createParticles();
+                }, 700);
+                
+                // Fade out cursor after typing
+                setTimeout(() => {
+                    cursor.style.opacity = 0;
+                    setTimeout(() => {
+                        cursor.style.display = 'none';
+                    }, 500);
+                }, 1200);
             }
-        }, 150);
+        }, 120);
     }
     
-    // Color animation
-    function startColorAnimation() {
+    // Subtle color animation
+    function startSubtleColorAnimation() {
         const chars = document.querySelectorAll('.char');
-        let colorIndex = 0;
         
-        setInterval(() => {
-            chars.forEach((char, i) => {
-                // Set a different color for each character with a slight delay
-                setTimeout(() => {
-                    char.style.color = colors[(colorIndex + i) % colors.length];
-                    
-                    // Add a slight bounce animation
-                    char.style.transform = 'translateY(-10px)';
-                    setTimeout(() => {
-                        char.style.transform = 'translateY(0)';
-                    }, 150);
-                }, i * 50);
+        chars.forEach((char, i) => {
+            // Add slight glow effect to each character
+            char.style.textShadow = '0 0 15px rgba(255, 255, 255, 0.6)';
+            
+            // Subtle color change on hover
+            char.addEventListener('mouseover', () => {
+                char.style.color = colors[i % colors.length];
+                char.style.transform = 'translateY(-5px)';
+                char.style.transition = 'transform 0.3s ease, color 0.3s ease';
             });
             
-            colorIndex = (colorIndex + 1) % colors.length;
-        }, 2000);
+            char.addEventListener('mouseout', () => {
+                char.style.color = '#fff';
+                char.style.transform = 'translateY(0)';
+            });
+        });
     }
     
-    // Create floating particles
+    // Create subtle floating particles
     function createParticles() {
-        for (let i = 0; i < 50; i++) {
+        // Create initial particles
+        for (let i = 0; i < 25; i++) {
             createParticle();
         }
         
-        // Continue creating particles periodically
+        // Continue creating particles periodically at a slower rate
         setInterval(() => {
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) {
                 createParticle();
             }
-        }, 1000);
+        }, 2000);
     }
     
     function createParticle() {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        // Random position, color, and size
+        // Random position and size (smaller particles)
         const x = Math.random() * window.innerWidth;
         const y = Math.random() * window.innerHeight;
-        const size = Math.floor(Math.random() * 6) + 4;
-        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.floor(Math.random() * 3) + 2;
         
         particle.style.left = `${x}px`;
         particle.style.top = `${y}px`;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
-        particle.style.backgroundColor = color;
         
-        // Random animation duration and delay
-        const duration = Math.random() * 3 + 2;
-        const delay = Math.random() * 2;
+        // Random animation duration and delay (slower for more subtle effect)
+        const duration = Math.random() * 4 + 3;
+        const delay = Math.random() * 1.5;
         
-        particle.style.animation = `float ${duration}s linear ${delay}s forwards`;
+        particle.style.animation = `float ${duration}s ease-in ${delay}s forwards`;
         
         particlesContainer.appendChild(particle);
         
@@ -112,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make animation responsive to window resizing
     window.addEventListener('resize', () => {
         // Adjust font size based on window width for responsiveness
-        const fontSize = Math.min(window.innerWidth / 10, 80);
+        const fontSize = Math.min(window.innerWidth / 12, 72);
         nameElement.style.fontSize = `${fontSize}px`;
     });
     
